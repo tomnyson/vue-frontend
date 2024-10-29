@@ -37,12 +37,12 @@ export default {
     }
   },
   setup(props) {
-    // State
     const blog = ref(null);
-    const imageWidth = ref(800);
-    const imageHeight = ref(600);
+    const imageWidth = ref(1200);  // Ensure sufficient width for Facebook
+    const imageHeight = ref(630);  // Recommended aspect ratio for Facebook
+    const siteUrl = window.location.origin;
+    const siteName = 'Your Site Name';
 
-    // Methods
     const fetchBlogDetail = async () => {
       try {
         const response = await axios.get(`https://61a5e3c48395690017be8ed2.mockapi.io/blogs/blogs/${props.id}`);
@@ -53,70 +53,56 @@ export default {
       }
     };
 
-    // SEO Meta Tags using useHead
     const updateMetaTags = () => {
       if (!blog.value) return;
 
+      const fullImageUrl = blog.value.image.startsWith('http') 
+        ? blog.value.image 
+        : `${siteUrl}${blog.value.image}`;
+
+      const truncatedDescription = blog.value.description.length > 200 
+        ? `${blog.value.description.substring(0, 197)}...` 
+        : blog.value.description;
+
       useHead({
-        title: `${blog.value.title} | Your Site Name`,
+        title: `${blog.value.title} | ${siteName}`,
         meta: [
-          {
-            name: 'description',
-            content: blog.value.description
-          },
-          {
-            name: 'author',
-            content: blog.value.author
-          },
-          {
-            property: 'og:title',
-            content: blog.value.title
-          },
-          {
-            property: 'og:description',
-            content: blog.value.description
-          },
-          {
-            property: 'og:image',
-            content: blog.value.image
-          },
-          {
-            property: 'og:type',
-            content: 'article'
-          },
-          {
-            property: 'og:url',
-            content: window.location.href
-          },
-          {
-            name: 'twitter:card',
-            content: 'summary_large_image'
-          },
-          {
-            name: 'twitter:title',
-            content: blog.value.title
-          },
-          {
-            name: 'twitter:description',
-            content: blog.value.description
-          },
-          {
-            name: 'twitter:image',
-            content: blog.value.image
-          }
+          { name: 'description', content: truncatedDescription },
+          { name: 'author', content: blog.value.author },
+          
+          // Facebook Open Graph Tags
+          { property: 'og:site_name', content: siteName },
+          { property: 'og:title', content: blog.value.title },
+          { property: 'og:description', content: truncatedDescription },
+          { property: 'og:image', content: fullImageUrl },
+          { property: 'og:image:width', content: imageWidth.value.toString() },
+          { property: 'og:image:height', content: imageHeight.value.toString() },
+          { property: 'og:type', content: 'article' },
+          { property: 'og:url', content: `${siteUrl}/blog/${props.id}` },
+          { property: 'og:locale', content: 'en_US' },
+          { property: 'article:published_time', content: blog.value.publishDate },
+          { property: 'article:modified_time', content: blog.value.updateDate },
+          { property: 'article:author', content: blog.value.author },
+          
+          // Twitter Card Tags
+          { name: 'twitter:card', content: 'summary_large_image' },
+          { name: 'twitter:title', content: blog.value.title },
+          { name: 'twitter:description', content: truncatedDescription },
+          { name: 'twitter:image', content: fullImageUrl }
         ],
         link: [
-          {
-            rel: 'canonical',
-            href: window.location.href
-          }
+          { rel: 'canonical', href: `${siteUrl}/blog/${props.id}` }
         ]
       });
     };
 
-    // Add JSON-LD structured data
     const addJsonLd = () => {
       if (!blog.value) return;
+
+      const existingScript = document.querySelector('script[type="application/ld+json"]');
+      if (existingScript) {
+        existingScript.remove();
+      }
 
       const script = document.createElement('script');
       script.type = 'application/ld+json';
@@ -125,27 +111,24 @@ export default {
         '@type': 'BlogPosting',
         'headline': blog.value.title,
         'image': blog.value.image,
-        'author': {
-          '@type': 'Person',
-          'name': blog.value.author
+        'author': { '@type': 'Person', 'name': blog.value.author },
+        'publisher': {
+          '@type': 'Organization',
+          'name': siteName,
+          'logo': { '@type': 'ImageObject', 'url': `${siteUrl}/logo.png` }
         },
         'datePublished': blog.value.publishDate,
         'dateModified': blog.value.updateDate,
         'description': blog.value.description,
-        'mainEntityOfPage': {
-          '@type': 'WebPage',
-          '@id': window.location.href
-        }
+        'mainEntityOfPage': { '@type': 'WebPage', '@id': `${siteUrl}/blog/${props.id}` }
       });
       document.head.appendChild(script);
     };
 
-    // Lifecycle hooks
     onMounted(() => {
       fetchBlogDetail();
     });
 
-    // Watch for changes in blog data
     watch(blog, () => {
       if (blog.value) {
         updateMetaTags();
@@ -153,7 +136,6 @@ export default {
       }
     }, { deep: true });
 
-    // Return refs and methods needed in template
     return {
       blog,
       imageWidth,
@@ -167,20 +149,5 @@ export default {
 .img-fluid {
   max-width: 100%;
   height: auto;
-  display: block; /* Prevents layout shift */
-}
-
-/* Add print styles for better accessibility */
-@media print {
-  .container {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-  }
-  
-  img {
-    max-width: 100%;
-    page-break-inside: avoid;
-  }
 }
 </style>
