@@ -29,11 +29,14 @@ module.exports = defineConfig({
     config.plugins.push(
       new PrerenderSPAPlugin({
         staticDir: path.join(__dirname, 'dist'),
-        routes, // Pass the dynamic routes array
+        routes,
         renderer: new PrerenderSPAPlugin.PuppeteerRenderer({
-          renderAfterDocumentEvent: 'render-event',
+          renderAfterTime: 5000, // Wait for 5 seconds to ensure everything loads
+          headless: true,
         }),
       })
     );
+
+
   },
 });
