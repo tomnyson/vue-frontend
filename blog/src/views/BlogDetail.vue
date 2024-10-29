@@ -12,9 +12,8 @@
       />
       <article>
         <p>{{ blog.description }}</p>
-        <!-- Add structured data for article content -->
-        <meta itemProp="datePublished" :content="blog.publishDate" />
-        <meta itemProp="author" :content="blog.author" />
+        <meta itemprop="datePublished" :content="blog.publishDate" />
+        <meta itemprop="author" :content="blog.author" />
       </article>
     </div>
     <div v-else>
@@ -33,13 +32,13 @@ export default {
   props: {
     id: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props) {
     const blog = ref(null);
-    const imageWidth = ref(1200);  // Ensure sufficient width for Facebook
-    const imageHeight = ref(630);  // Recommended aspect ratio for Facebook
+    const imageWidth = ref(1200);
+    const imageHeight = ref(630);
     const siteUrl = window.location.origin;
     const siteName = 'Your Site Name';
 
@@ -48,6 +47,10 @@ export default {
         const response = await axios.get(`https://61a5e3c48395690017be8ed2.mockapi.io/blogs/blogs/${props.id}`);
         blog.value = response.data;
         updateMetaTags();
+        addJsonLd();
+
+        // Dispatch render-event to notify PrerenderSPAPlugin that content is ready
+        document.dispatchEvent(new Event('render-event'));
       } catch (error) {
         console.error("Error fetching blog details:", error);
       }
@@ -70,7 +73,6 @@ export default {
           { name: 'description', content: truncatedDescription },
           { name: 'author', content: blog.value.author },
           
-          // Facebook Open Graph Tags
           { property: 'og:site_name', content: siteName },
           { property: 'og:title', content: blog.value.title },
           { property: 'og:description', content: truncatedDescription },
@@ -84,7 +86,6 @@ export default {
           { property: 'article:modified_time', content: blog.value.updateDate },
           { property: 'article:author', content: blog.value.author },
           
-          // Twitter Card Tags
           { name: 'twitter:card', content: 'summary_large_image' },
           { name: 'twitter:title', content: blog.value.title },
           { name: 'twitter:description', content: truncatedDescription },
@@ -139,7 +140,7 @@ export default {
     return {
       blog,
       imageWidth,
-      imageHeight
+      imageHeight,
     };
   }
 };
