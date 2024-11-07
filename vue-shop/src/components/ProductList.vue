@@ -1,96 +1,61 @@
-<script setup></script>
+<script setup>
+import { reactive,ref } from "vue";
+const products = reactive([
+  {
+    id: 1,
+    name: "Sản phẩm 1",
+    description: "Mô tả sản phẩm 1, rất chất lượng và đáng mua.",
+    price: 500000,
+    image: "http://picsum.photos/id/1/300/300",
+  },
+  {
+    id: 2,
+    name: "Sản phẩm 2",
+    description: "Mô tả sản phẩm 2, chất lượng tốt và giá phải chăng.",
+    price: 300000,
+    image: "http://picsum.photos/id/2/300/300",
+  },
+  {
+    id: 3,
+    name: "Sản phẩm 3",
+    description: "Mô tả sản phẩm 3, sản phẩm cao cấp và nhiều tính năng.",
+    price: 1000000,
+    image: "http://picsum.photos/id/3/300/300",
+  },
+]);
+
+const isDiscount = ref(false);
+</script>
 <template>
-     <div class="container py-5">
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            <!-- Product 1 -->
-            <div class="col">
-                <div class="card h-100 shadow-sm">
-                    <img src="https://placehold.co/600x400" class="card-img-top" alt="Product 1">
-                    <div class="card-body">
-                        <h5 class="card-title">Premium   Headphones</h5>
-                        <p class="card-text text-muted">High-quality wireless headphones with noise cancellation</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="h5 mb-0">$299.99</span>
-                            <button class="btn btn-primary">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
+  <div class="container py-5">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <!-- Product 1 -->
+      <div class="col" v-for="(product, index) in products" :key="index">
+        <div  class="card h-100 shadow-sm">
+          <img
+            src="https://placehold.co/600x400"
+            class="card-img-top"
+            alt="Product 1"
+          />
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text text-muted">
+              index: {{ index }} <br/>
+             {{ product.description }}
+            </p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span :class="['h5', 'mb-0', {sale: product.price > 300000}]">{{ product.price }}vnd</span>
+              <button class="btn btn-primary">Add to Cart</button>
             </div>
-
-            <!-- Product 2 -->
-            <div class="col">
-                <div class="card h-100 shadow-sm">
-                    <img src="https://placehold.co/600x400" class="card-img-top" alt="Product 2">
-                    <div class="card-body">
-                        <h5 class="card-title">Smart Watch</h5>
-                        <p class="card-text text-muted">Fitness tracker with heart rate monitoring</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="h5 mb-0">$199.99</span>
-                            <button class="btn btn-primary">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 3 -->
-            <div class="col">
-                <div class="card h-100 shadow-sm">
-                    <img src="https://placehold.co/600x400" class="card-img-top" alt="Product 3">
-                    <div class="card-body">
-                        <h5 class="card-title">Laptop Backpack</h5>
-                        <p class="card-text text-muted">Water-resistant backpack with USB charging port</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="h5 mb-0">$79.99</span>
-                            <button class="btn btn-primary">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 4 -->
-            <div class="col">
-                <div class="card h-100 shadow-sm">
-                    <img src="https://placehold.co/600x400" class="card-img-top" alt="Product 4">
-                    <div class="card-body">
-                        <h5 class="card-title">Wireless Mouse</h5>
-                        <p class="card-text text-muted">Ergonomic design with adjustable DPI</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="h5 mb-0">$49.99</span>
-                            <button class="btn btn-primary">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 5 -->
-            <div class="col">
-                <div class="card h-100 shadow-sm">
-                    <img src="https://placehold.co/600x400" class="card-img-top" alt="Product 5">
-                    <div class="card-body">
-                        <h5 class="card-title">Mechanical Keyboard</h5>
-                        <p class="card-text text-muted">RGB backlit mechanical switches</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="h5 mb-0">$129.99</span>
-                            <button class="btn btn-primary">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 6 -->
-            <div class="col">
-                <div class="card h-100 shadow-sm">
-                    <img src="https://placehold.co/600x400" class="card-img-top" alt="Product 6">
-                    <div class="card-body">
-                        <h5 class="card-title">4K Monitor</h5>
-                        <p class="card-text text-muted">32-inch 4K UHD display with HDR</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="h5 mb-0">$399.99</span>
-                            <button class="btn btn-primary">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </template>
+<style scoped>
+    .sale {
+        color: red;
+        font-weight: bold;
+    }
+</style>
