@@ -1,6 +1,7 @@
 create project
 composer create-project --prefer-dist laravel/laravel .
 run project 
+## chay du an
 php artisan serve
 ## create migration
 php artisan make:migration add_role_to_users_table --table=users
