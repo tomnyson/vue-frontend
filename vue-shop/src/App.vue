@@ -7,15 +7,12 @@ import CategoryList from './components/CategoryList.vue';
 </script>
 
 <template>
-  <header>
-    <div class="container mt-3">
       <!-- <HelloWorld mon_hoc="Frontend framework" lop="wdk19" /> -->
       <!-- <ThongTin diemyeu ="ngu" diemmanh="gioi" mon_hoc="Frontend framework" lop="wdk19" /> -->
       <!-- <Login /> -->
        <!-- <ProductList/> -->
-        <CategoryList/>
-    </div>
-  </header>
+        <!-- <CategoryList/> -->
+         <router-view></router-view>
 </template>
 
 <style scoped>

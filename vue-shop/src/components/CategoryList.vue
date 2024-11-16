@@ -4,6 +4,7 @@ import axios from "axios";
 import { API_URL } from "../const.js";
 const categories = reactive([]);
 const name = ref("aaa");
+const selectedId = ref(null);
 // call khi ui render
 onMounted(async () => {
   const reponse = await axios.get(`${API_URL}/categories`);
@@ -18,13 +19,32 @@ const handleSubmit = async () => {
     const data = {
       name: name.value,
     };
-    const reponse = await axios.post(`${API_URL}/categories`, data);
-    if (reponse.status === 201) {
-      alert("thêm thành công");
-      console.log(reponse.data);
-      categories.push(reponse?.data?.data);
-      name.value = "";
+    if (selectedId.value) {
+      const reponse = await axios.put(
+        `${API_URL}/categories/${selectedId.value}`,
+        data
+      );
+      if (reponse.status === 200) {
+        alert("cap nhat thanh cong");
+        const index = categories.findIndex(
+          (item) => item.id === selectedId.value
+        );
+        if (index !== -1) {
+          categories[index] = reponse?.data?.data;
+        }
+      }
+    } else {
+      const reponse = await axios.post(`${API_URL}/categories`, data);
+      if (reponse.status === 201) {
+        alert("thêm thành công");
+        console.log(reponse.data);
+        categories.push(reponse?.data?.data);
+        name.value = "";
+      }
     }
+    // post
+
+    //update
   }
 };
 const handleDelete = async (id) => {
@@ -41,8 +61,9 @@ const handleDelete = async (id) => {
 };
 
 const handleEdit = async (item) => {
-    name.value = item.name;
-    }
+  selectedId.value = item.id;
+  name.value = item.name;
+};
 </script>
 <template>
   <div class="container py-5">
@@ -72,14 +93,16 @@ const handleEdit = async (item) => {
           >
             <a href="#">{{ item.name }}</a>
             <div>
-              <button @click="handleDelete(item.id)" class="btn btn-danger ml-3">
-              xoá
-            </button>
-            <button @click="handleEdit(item)" class="btn btn-info ml-3">
-              sửa
-            </button>
+              <button
+                @click="handleDelete(item.id)"
+                class="btn btn-danger ml-3"
+              >
+                xoá
+              </button>
+              <button @click="handleEdit(item)" class="btn btn-info ml-3">
+                sửa
+              </button>
             </div>
-            
           </li>
         </ul>
       </div>
