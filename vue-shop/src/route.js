@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory} from 'vue-router'
 import CategoryList from './components/CategoryList.vue'
+import CategoryDetail from './components/CategoryDetail.vue'
 import Login from './components/Login.vue'
 // import Register from './components/Register.vue'
 
@@ -17,7 +18,7 @@ const routes = [
     {
         path: '/categories/:id',
         name: 'categoryDetails',
-        component: CategoryList
+        component: CategoryDetail
     },
     {
         path: '/login',

@@ -102,6 +102,7 @@ const handleEdit = async (item) => {
               <button @click="handleEdit(item)" class="btn btn-info ml-3">
                 sửa
               </button>
+              <router-link class="ml-3" :to="`/categories/${item.id}`">Hiển thị</router-link>
             </div>
           </li>
         </ul>
