@@ -4,6 +4,20 @@ import HelloWorld from './components/HelloWorld.vue'
 import Login from './components/Login.vue'
 import ProductList from './components/ProductList.vue';
 import CategoryList from './components/CategoryList.vue';
+import { useRouter } from 'vue-router'
+import {ref, onMounted} from 'vue'
+const isLogin = ref(false)
+const router = useRouter()
+  onMounted(async () => {
+    if(localStorage.getItem('token')){
+      isLogin.value = true
+    }
+});
+
+const handleLogout = () => {
+  localStorage.removeItem('token')
+  isLogin.value = false
+}
 </script>
 
 <template>
@@ -13,7 +27,7 @@ import CategoryList from './components/CategoryList.vue';
        <!-- <ProductList/> -->
         <!-- <CategoryList/> -->
          <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
+  <a class="navbar-brand" href="#">Home</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -25,9 +39,13 @@ import CategoryList from './components/CategoryList.vue';
       <li class="nav-item">
         <RouterLink class="nav-link" to="/categories">Danh Mục</RouterLink>
       </li>
-      <li class="nav-item">
+    <li v-if="!isLogin" class="nav-item">
         <RouterLink class="nav-link"  to="/Login">Đăng Nhập</RouterLink>
+     
       </li>
+      <li v-if="isLogin" class="nav-item">
+        <button  @click="handleLogout" class="btn btn-link">Logout</button>
+      </li>  
     </ul>
   </div>
 </nav>
