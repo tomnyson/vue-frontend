@@ -6,5 +6,8 @@
     {
       "path": "../../../../../../../../Applications/XAMPP/xamppfiles/htdocs/backend"
     }
-  ]
+  ],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "frontend-vue"
+  }
 }
