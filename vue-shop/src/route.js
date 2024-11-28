@@ -2,13 +2,14 @@ import { createRouter, createWebHistory} from 'vue-router'
 import CategoryList from './components/CategoryList.vue'
 import CategoryDetail from './components/CategoryDetail.vue'
 import Login from './components/Login.vue'
+import ProductList from './components/ProductList.vue'
 // import Register from './components/Register.vue'
 
 const routes = [
     {
         path: '/',
         name: 'home',
-        component: CategoryList,
+        component: ProductList,
         meta: { requiredLogin: false }
     },
     {
