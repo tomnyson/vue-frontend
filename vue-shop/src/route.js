@@ -3,6 +3,8 @@ import CategoryList from './components/CategoryList.vue'
 import CategoryDetail from './components/CategoryDetail.vue'
 import Login from './components/Login.vue'
 import ProductList from './components/ProductList.vue'
+import Cart from './components/Cart.vue'
+import Checkout from './components/Checkout.vue'
 // import Register from './components/Register.vue'
 
 const routes = [
@@ -28,6 +30,19 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: Login,
+        meta: { requiredLogin: false }
+    },
+    {
+        path: '/carts',
+        name: 'Carts',
+        component: Cart,
+        meta: { requiredLogin: false }
+    },
+
+    {
+        path: '/checkout',
+        name: 'Checkout',
+        component: Checkout,
         meta: { requiredLogin: false }
     },
 ]

@@ -1,7 +1,9 @@
 <script setup>
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, onMounted, computed } from "vue";
 import axios from "axios";
 import { API_URL } from "../const.js";
+import { useStore } from 'vuex';
+const store = useStore();
 const products = reactive([
   // {
   //   id: 1,
@@ -35,6 +37,12 @@ onMounted(async () => {
   }
 });
 
+
+const addToCart = (product) => {
+  alert("add to cart")
+  store.dispatch('addToCart', product);
+};
+const cartItems = computed(() => store.getters.cartItems);
 </script>
 <template>
   <div class="container py-5">
@@ -55,7 +63,7 @@ onMounted(async () => {
             </p>
             <div class="d-flex justify-content-between align-items-center">
               <span :class="['h5', 'mb-0', {sale: product.price > 300000}]">{{ product.price }}vnd</span>
-              <button class="btn btn-primary">Add to Cart</button>
+              <button @click="addToCart(product)" class="btn btn-primary">Add to Cart</button>
             </div>
           </div>
         </div>
